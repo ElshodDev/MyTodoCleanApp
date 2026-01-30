@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyTodoCleanApp.Application.Common.Interfaces;
 using MyTodoCleanApp.Domain.Entities;
 
 namespace MyTodoCleanApp.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
