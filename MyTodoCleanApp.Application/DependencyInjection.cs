@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using MyTodoCleanApp.Application.Common.Behaviors;
 
 namespace MyTodoCleanApp.Application
 {
@@ -6,7 +9,17 @@ namespace MyTodoCleanApp.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+            var assembly = typeof(DependencyInjection).Assembly;
+
+            services.AddMediatR(configuration =>
+            {
+                configuration.RegisterServicesFromAssembly(assembly);
+
+                configuration.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            });
+
+            services.AddValidatorsFromAssembly(assembly);
+
             return services;
         }
     }
