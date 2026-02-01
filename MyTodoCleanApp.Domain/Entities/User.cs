@@ -1,13 +1,11 @@
-﻿namespace MyTodoCleanApp.Domain.Entities
-{
-    public class User
-    {
-        public Guid Id { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string PasswordHash { get; set; } = string.Empty;
-        public DateTimeOffset CreatedDate { get; set; }
+﻿using Microsoft.AspNetCore.Identity;
 
-        public ICollection<TodoItem> TodoItems { get; set; } = new List<TodoItem>();
-    }
+namespace MyTodoCleanApp.Domain.Entities;
+
+public class User : IdentityUser<Guid>
+{
+    public string FullName { get; set; } = string.Empty;
+    public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
+
+    public ICollection<TodoItem> TodoItems { get; set; } = new List<TodoItem>();
 }

@@ -4,7 +4,7 @@ using MyTodoCleanApp.Domain.Entities;
 
 namespace MyTodoCleanApp.Application.Users.Commands.CreateUser;
 
-public record CreateUserCommand(string Username, string Email, string Password) : IRequest<Guid>;
+public record CreateUserCommand(string UserName, string Email, string Password) : IRequest<Guid>;
 
 public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
 {
@@ -20,7 +20,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Username = request.Username,
+            UserName = request.UserName,
             Email = request.Email,
             PasswordHash = request.Password,
             CreatedDate = DateTimeOffset.UtcNow

@@ -1,21 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyTodoCleanApp.Application.Common.Interfaces;
 using MyTodoCleanApp.Domain.Entities;
 
-namespace MyTodoCleanApp.Infrastructure.Persistence
+namespace MyTodoCleanApp.Infrastructure.Persistence;
+public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IApplicationDbContext
 {
-    public class ApplicationDbContext : DbContext, IApplicationDbContext
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
+    }
 
-        public DbSet<TodoItem> TodoItems => Set<TodoItem>();
-        public DbSet<User> Users => Set<User>();
+    public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-            base.OnModelCreating(modelBuilder);
-        }
+    public override DbSet<User> Users => base.Users;
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }
